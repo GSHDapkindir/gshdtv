@@ -8,8 +8,7 @@
 :root {
   --yellow: #ffcf00;
   --red: #e60026;
-  --dark: #080000;
-  --panel: rgba(15, 0, 0, .94);
+  --black: #080000;
 }
 
 * {
@@ -22,13 +21,12 @@ html, body {
   height: 100%;
   margin: 0;
   overflow: hidden;
-  background: var(--dark);
+  background: #000;
   color: #fff;
   font-family: Inter, Arial, sans-serif;
 }
 
 body {
-  position: relative;
   min-height: 100dvh;
 }
 
@@ -40,11 +38,9 @@ button {
   position: relative;
   width: 100%;
   height: 100%;
-  min-height: 100dvh;
+  height: 100dvh;
   overflow: hidden;
-  background:
-    radial-gradient(ellipse at top, rgba(230,0,38,.24), transparent 55%),
-    linear-gradient(145deg, #160000, #050000 75%);
+  background: #080000;
 }
 
 .ambient {
@@ -54,33 +50,26 @@ button {
   background:
     radial-gradient(ellipse at 15% 20%, rgba(255,207,0,.13), transparent 32%),
     radial-gradient(ellipse at 85% 70%, rgba(230,0,38,.23), transparent 36%);
-  animation: ambientMove 9s ease-in-out infinite alternate;
-}
-
-@keyframes ambientMove {
-  from { transform: scale(1) translate(0,0); }
-  to { transform: scale(1.1) translate(-1%,1%); }
 }
 
 .topbar {
   position: absolute;
-  z-index: 5;
+  z-index: 10;
   top: 0;
   left: 0;
   width: 100%;
-  height: 70px;
+  height: 64px;
   padding: 0 22px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(to bottom, rgba(0,0,0,.86), transparent);
+  background: linear-gradient(to bottom, rgba(0,0,0,.8), transparent);
 }
 
 .brand {
+  font-size: clamp(18px, 2.5vw, 27px);
   font-weight: 900;
-  font-size: clamp(18px, 2.6vw, 27px);
   letter-spacing: 1px;
-  white-space: nowrap;
 }
 
 .brand span {
@@ -88,13 +77,13 @@ button {
 }
 
 .live-badge {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
+  padding: 7px 12px;
   border: 1px solid rgba(255,207,0,.5);
   border-radius: 30px;
-  padding: 7px 12px;
-  background: rgba(0,0,0,.5);
+  background: rgba(0,0,0,.6);
   color: var(--yellow);
   font-size: 11px;
   font-weight: 800;
@@ -124,41 +113,43 @@ button {
   display: flex;
 }
 
-/* GERİ SAYIM EKRANI */
+/* GERİ SAYIM */
 
 #countdownScreen {
   align-items: center;
   justify-content: center;
-  padding: 75px 18px 24px;
+  padding: 64px 0 0;
 }
 
 .countdown-layout {
-  width: min(1050px, 100%);
-  height: min(680px, 100%);
-  min-height: 0;
-  display: grid;
-  grid-template-columns: 1fr;
-  align-items: center;
-  justify-items: center;
   position: relative;
   isolation: isolate;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
+/* FOTOĞRAF ARTIK TÜM ALANI KAPLAR */
 
 .background-photo {
   position: absolute;
   inset: 0;
   z-index: -2;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
-  border-radius: 22px;
-  background: #120000;
+  background: #080000;
 }
 
 .background-photo img {
+  display: block;
   width: 100%;
   height: 100%;
-  display: block;
-  object-fit: contain;
-  object-position: center;
+  object-fit: cover;
+  object-position: center center;
 }
 
 .background-photo::after {
@@ -166,8 +157,8 @@ button {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, rgba(0,0,0,.72), rgba(0,0,0,.25), rgba(0,0,0,.72)),
-    linear-gradient(0deg, rgba(0,0,0,.9), transparent 65%);
+    linear-gradient(90deg, rgba(0,0,0,.64), rgba(0,0,0,.15), rgba(0,0,0,.64)),
+    linear-gradient(0deg, rgba(0,0,0,.88), transparent 72%);
 }
 
 .countdown-content {
@@ -177,9 +168,7 @@ button {
 }
 
 .eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+  display: inline-block;
   padding: 8px 14px;
   border: 1px solid rgba(255,207,0,.55);
   border-radius: 30px;
@@ -207,7 +196,7 @@ button {
 
 .subtitle {
   margin: 16px auto 24px;
-  color: rgba(255,255,255,.85);
+  color: rgba(255,255,255,.9);
   font-size: clamp(12px, 2vw, 16px);
   line-height: 1.6;
 }
@@ -225,7 +214,7 @@ button {
   padding: clamp(12px, 2.2vw, 22px) 4px;
   border-radius: 13px;
   border: 1px solid rgba(255,207,0,.45);
-  background: linear-gradient(145deg, rgba(230,0,38,.8), rgba(45,0,0,.94));
+  background: linear-gradient(145deg, rgba(230,0,38,.9), rgba(45,0,0,.94));
   box-shadow: 0 8px 24px rgba(0,0,0,.3);
 }
 
@@ -248,10 +237,10 @@ button {
 .countdown-note {
   margin-top: 18px;
   font-size: 11px;
-  color: rgba(255,255,255,.68);
+  color: rgba(255,255,255,.8);
 }
 
-/* VİDEO EKRANI */
+/* OYNATICI */
 
 #playerScreen {
   flex-direction: column;
@@ -302,7 +291,6 @@ button {
   cursor: pointer;
 }
 
-.action-btn:focus-visible,
 .action-btn:focus {
   outline: 2px solid var(--yellow);
   outline-offset: 3px;
@@ -313,11 +301,12 @@ button {
   flex: 1 1 auto;
   min-height: 0;
   width: 100%;
-  background: #000;
   overflow: hidden;
+  background: #000;
 }
 
-/* ÖNEMLİ: OYNATICI object-fit: fill */
+/* İSTEDİĞİN AYAR: FILL */
+
 #player {
   display: block;
   width: 100%;
@@ -334,13 +323,13 @@ button {
 #playerMessage {
   position: absolute;
   inset: 0;
+  z-index: 2;
   display: none;
   align-items: center;
   justify-content: center;
   padding: 25px;
   text-align: center;
-  background: rgba(0,0,0,.9);
-  z-index: 2;
+  background: rgba(0,0,0,.92);
 }
 
 #playerMessage.visible {
@@ -381,7 +370,7 @@ button {
 
 .footer-line {
   flex: 0 0 auto;
-  min-height: 28px;
+  min-height: 26px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -392,21 +381,34 @@ button {
   letter-spacing: 1px;
 }
 
-/* YATAY EKRAN */
+/* YATAY TV */
 
 @media (orientation: landscape) {
   .topbar {
-    height: 48px;
-    padding: 0 16px;
+    height: 45px;
+    padding: 0 18px;
   }
 
   #countdownScreen {
-    padding: 48px 14px 12px;
+    padding: 0;
   }
 
   .countdown-layout {
-    width: min(1100px, 100%);
+    width: 100%;
     height: 100%;
+  }
+
+  .background-photo {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .background-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
   }
 
   .countdown-content {
@@ -415,7 +417,7 @@ button {
 
   .main-title {
     margin: 10px 0 5px;
-    font-size: clamp(30px, 6vh, 58px);
+    font-size: clamp(30px, 7vh, 58px);
   }
 
   .subtitle {
@@ -445,35 +447,33 @@ button {
   }
 
   .player-topbar {
-    min-height: 44px;
-    padding: 5px 12px;
+    min-height: 40px;
+    padding: 4px 12px;
   }
 
   .action-btn {
-    min-height: 31px;
+    min-height: 30px;
   }
 
   .footer-line {
-    min-height: 20px;
+    min-height: 18px;
   }
 }
 
+/* DİKEY TELEFON */
+
 @media (max-width: 480px) and (orientation: portrait) {
   .topbar {
-    height: 58px;
-    padding: 0 13px;
+    height: 56px;
+    padding: 0 12px;
   }
 
   #countdownScreen {
-    padding: 60px 10px 14px;
+    padding: 0;
   }
 
   .countdown-layout {
     height: 100%;
-  }
-
-  .background-photo {
-    border-radius: 14px;
   }
 
   .countdown-content {
@@ -508,9 +508,11 @@ button {
   }
 }
 
+/* KÜÇÜK YATAY EKRAN */
+
 @media (max-height: 420px) and (orientation: landscape) {
   .player-topbar {
-    min-height: 36px;
+    min-height: 32px;
   }
 
   .footer-line {
@@ -518,10 +520,7 @@ button {
   }
 }
 
-:fullscreen #playerScreen {
-  width: 100%;
-  height: 100%;
-}
+/* TAM EKRAN */
 
 #playerScreen:fullscreen .player-topbar,
 #playerScreen:fullscreen .footer-line {
@@ -533,8 +532,10 @@ button {
   height: 100%;
 }
 
-.hidden {
-  display: none !important;
+#playerScreen:fullscreen #player {
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
 }
 </style></head><body>
 <div id="app">
@@ -542,9 +543,9 @@ button {
     <div class="brand">GSHD <span>VIP</span></div>
     <div class="live-badge">
       <span class="live-dot"></span>
-      <span>YAYIN MERKEZİ</span>
+      YAYIN MERKEZİ
     </div>
-  </header>  <!-- GERİ SAYIM -->  <main id="countdownScreen" class="screen active">
+  </header>  <main id="countdownScreen" class="screen active">
     <section class="countdown-layout">
       <div class="background-photo">
         <img
@@ -559,9 +560,7 @@ button {
       <span>BAŞLIYOR</span>
     </h1>
 
-    <p class="subtitle">
-      Yayının başlamasına kalan süre
-    </p>
+    <p class="subtitle">Yayının başlamasına kalan süre</p>
 
     <div class="countdown">
       <div class="time-box">
@@ -583,14 +582,14 @@ button {
     </div>
 
     <div class="countdown-note" id="countdownNote">
-      Yayın başladığında oynatıcı otomatik açılacaktır.
+      Yayın başladığında oynatıcı açılacaktır.
     </div>
   </div>
 </section>
 
-  </main>  <!-- VİDEO OYNATICI -->  <section id="playerScreen" class="screen">
+  </main>  <section id="playerScreen" class="screen">
     <div class="player-topbar">
-      <div class="player-title">GSHD <span>VIP</span> · CANLI YAYIN</div>  <div class="player-actions">
+      <div class="player-title">GSHD <span>VIP</span> · YAYIN</div>  <div class="player-actions">
     <button class="action-btn" id="playButton" type="button">▶ OYNAT</button>
     <button class="action-btn" id="fullscreenButton" type="button">⛶ TAM EKRAN</button>
   </div>
@@ -618,20 +617,20 @@ button {
 <div class="footer-line">GSHD VIP · SARI KIRMIZI YAYIN DENEYİMİ</div>
 
   </section>
-</div><!-- M3U8 desteği için HLS.js --><script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script><script>
-/* =====================================================
+</div><script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script><script>
+/* ==========================================
    AYARLAR
-   ===================================================== */
+   ========================================== */
 
-/* Buraya M3U8 veya MP4 yayın bağlantını yaz. */
+/* M3U8 veya MP4 bağlantını buraya yaz. */
 const VIDEO_URL = "VIDEO_LINKINI_BURAYA.m3u8";
 
-/* Yayın başlangıç zamanı: Türkiye saati (UTC+3). */
+/* Türkiye saatiyle yayın başlangıcı. */
 const START_TIME = "2026-10-26T21:00:00+03:00";
 
-/* =====================================================
-   SİSTEM
-   ===================================================== */
+/* ==========================================
+   OYNATICI
+   ========================================== */
 
 const countdownScreen = document.getElementById("countdownScreen");
 const playerScreen = document.getElementById("playerScreen");
@@ -662,10 +661,6 @@ function showPlayer() {
   if (!playerConfigured) {
     configurePlayer();
   }
-
-  if (playbackRequested) {
-    startPlayback();
-  }
 }
 
 function configurePlayer() {
@@ -689,14 +684,14 @@ function configurePlayer() {
   const isM3U8 = /\.m3u8(?:$|[?#])/i.test(url);
 
   if (isM3U8) {
-    /* Önce tarayıcının yerleşik HLS desteğini dene. */
+    /* Safari ve bazı TV tarayıcılarının yerleşik HLS desteği */
     if (player.canPlayType("application/vnd.apple.mpegurl")) {
       player.src = url;
       player.load();
       return;
     }
 
-    /* Yerleşik destek yoksa HLS.js kullan. */
+    /* Yerleşik HLS desteği yoksa HLS.js */
     if (window.Hls && Hls.isSupported()) {
       hls = new Hls({
         enableWorker: true,
@@ -720,8 +715,8 @@ function configurePlayer() {
 
         if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
           showMessage(
-            "Yayın bağlantısı kurulamadı",
-            "Bağlantıyı kontrol edip tekrar dene. Yayın sunucusu erişilebilir olmalı."
+            "Bağlantı hatası",
+            "Yayın bağlantısını kontrol et. Sunucuya erişilemiyor olabilir."
           );
           hls.startLoad();
         } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
@@ -729,7 +724,7 @@ function configurePlayer() {
         } else {
           showMessage(
             "Oynatma hatası",
-            "Bu yayın tarayıcı tarafından desteklenmiyor olabilir."
+            "Tarayıcı bu yayını desteklemiyor olabilir."
           );
           hls.destroy();
           hls = null;
@@ -740,13 +735,13 @@ function configurePlayer() {
     }
 
     showMessage(
-      "M3U8 desteği bulunamadı",
-      "Bu tarayıcı M3U8 oynatmayı desteklemiyor. HLS desteği olan bir tarayıcı veya oynatıcı kullan."
+      "M3U8 desteklenmiyor",
+      "Bu tarayıcı HLS oynatmayı desteklemiyor. HLS destekli bir tarayıcı kullan."
     );
     return;
   }
 
-  /* MP4 ve tarayıcının desteklediği diğer doğrudan video kaynakları. */
+  /* MP4 veya doğrudan video bağlantısı */
   player.src = url;
   player.load();
 }
@@ -758,9 +753,7 @@ async function startPlayback() {
     configurePlayer();
   }
 
-  if (!player.src && !hls) {
-    return;
-  }
+  if (!player.src && !hls) return;
 
   try {
     hideMessage();
@@ -768,15 +761,18 @@ async function startPlayback() {
   } catch (error) {
     showMessage(
       "Oynatmak için düğmeye bas",
-      "Tarayıcı otomatik oynatmayı engelledi. OYNAT düğmesine basarak yayını başlatabilirsin."
+      "Otomatik oynatma engellenmiş olabilir. OYNAT düğmesine bas."
     );
   }
 }
 
+/* ==========================================
+   GERİ SAYIM
+   ========================================== */
+
 function updateCountdown() {
   const target = new Date(START_TIME).getTime();
-  const now = Date.now();
-  const distance = target - now;
+  const distance = target - Date.now();
 
   if (distance <= 0) {
     ["days", "hours", "minutes", "seconds"].forEach(function (id) {
@@ -784,9 +780,7 @@ function updateCountdown() {
     });
 
     countdownNote.textContent = "Yayın başladı.";
-    playbackRequested = true;
     showPlayer();
-    startPlayback();
     return;
   }
 
@@ -807,6 +801,10 @@ function updateCountdown() {
   document.getElementById("seconds").textContent =
     String(seconds).padStart(2, "0");
 }
+
+/* ==========================================
+   DÜĞMELER
+   ========================================== */
 
 document.getElementById("playButton").addEventListener("click", function () {
   startPlayback();
@@ -850,26 +848,19 @@ player.addEventListener("error", function () {
   }
 });
 
-/* TV kumandası ve klavye desteği */
+/* TV kumandası ve klavye */
 document.addEventListener("keydown", function (event) {
   const key = event.key;
 
   if (
-    key === "Enter" ||
-    key === " " ||
     key === "MediaPlay" ||
-    key === "MediaPlayPause"
+    key === "MediaPlayPause" ||
+    key === " "
   ) {
-    if (document.activeElement === document.getElementById("playButton")) {
-      startPlayback();
-      event.preventDefault();
-      return;
-    }
-
     if (playerScreen.classList.contains("active")) {
       if (player.paused) {
         startPlayback();
-      } else if (key !== "Enter") {
+      } else {
         player.pause();
       }
       event.preventDefault();
@@ -885,6 +876,7 @@ document.addEventListener("keydown", function (event) {
   }
 });
 
+/* Başlangıç */
 updateCountdown();
 setInterval(updateCountdown, 1000);
 </script></body>
