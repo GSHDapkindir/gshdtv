@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080000">
+<title>GSHD | VIP TV</title>
+
+<style>
+:root {
+  --red: #d50024;
+  --yellow: #ffcf32;
+  --black: #080000;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  background: var(--black);
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+  overflow: hidden;
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.screen {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: #080000;
+  overflow: hidden;
+}
+
+/* ARKA PLAN FOTOĞRAFI */
+
+.background {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(
+      90deg,
+      rgba(10,0,0,.88),
+      rgba(10,0,0,.32),
+      rgba(10,0,0,.78)
+    ),
+    linear-gradient(
+      0deg,
+      rgba(0,0,0,.9),
+      transparent 65%
+    ),
+    url("https://raw.githubusercontent.com/GSHDapk/Logolar/refs/heads/main/file_00000000004081f4883457b1b87cc98d.png");
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  transform: scale(1.03);
+  animation: backgroundZoom 20s ease-in-out infinite alternate;
+}
+
+@keyframes backgroundZoom {
+  from { transform: scale(1.03); }
+  to { transform: scale(1.12); }
+}
+
+/* RENKLİ IŞIKLAR */
+
+.light {
+  position: absolute;
+  width: 45vw;
+  height: 45vw;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: .20;
+  pointer-events: none;
+}
+
+.light.red {
+  background: #e00026;
+  left: -15%;
+  top: 15%;
+}
+
+.light.yellow {
+  background: #ffbf00;
+  right: -15%;
+  bottom: -15%;
+}
+
+/* ÜST BÖLÜM */
+
+.header {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 25px 5%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255,255,255,.13);
+  background: linear-gradient(
+    180deg,
+    rgba(0,0,0,.65),
+    transparent
+  );
+}
+
+.brand {
+  font-size: clamp(18px, 2.4vw, 34px);
+  font-weight: 900;
+  letter-spacing: 3px;
+}
+
+.brand span {
+  color: var(--yellow);
+}
+
+.live {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: clamp(11px, 1.2vw, 16px);
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+.live-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--red);
+  box-shadow: 0 0 15px var(--red);
+  animation: blink 1.2s infinite;
+}
+
+@keyframes blink {
+  50% { opacity: .3; }
+}
+
+/* GERİ SAYIM ALANI */
+
+.countdown-page {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 100px 20px 55px;
+  text-align: center;
+  transition: opacity .8s ease, visibility .8s ease;
+}
+
+.countdown-page.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--yellow);
+  font-size: clamp(11px, 1.3vw, 17px);
+  font-weight: 800;
+  letter-spacing: clamp(2px, .5vw, 6px);
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+.eyebrow::before,
+.eyebrow::after {
+  content: "";
+  width: 35px;
+  height: 2px;
+  background: var(--red);
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(28px, 5.4vw, 76px);
+  font-weight: 900;
+  line-height: 1.08;
+  letter-spacing: -1px;
+  text-shadow: 0 5px 35px rgba(0,0,0,.8);
+}
+
+h1 .highlight {
+  color: var(--yellow);
+}
+
+.subtitle {
+  margin-top: 18px;
+  font-size: clamp(12px, 1.5vw, 20px);
+  color: rgba(255,255,255,.78);
+  letter-spacing: 2px;
+}
+
+/* SAYAÇ KUTULARI */
+
+.timer {
+  display: flex;
+  justify-content: center;
+  gap: clamp(8px, 2vw, 25px);
+  margin-top: 38px;
+  width: 100%;
+  max-width: 800px;
+}
+
+.timer-box {
+  flex: 1;
+  max-width: 155px;
+  min-width: 0;
+  padding: clamp(13px, 2.2vw, 27px) 5px;
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 12px;
+  background: rgba(10,0,0,.64);
+  box-shadow: 0 10px 35px rgba(0,0,0,.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.timer-box::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--red), var(--yellow));
+}
+
+.number {
+  display: block;
+  font-size: clamp(30px, 5vw, 65px);
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+  color: white;
+  text-shadow: 0 0 25px rgba(255,207,50,.16);
+}
+
+.label {
+  display: block;
+  margin-top: 10px;
+  font-size: clamp(9px, 1vw, 13px);
+  color: var(--yellow);
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+/* TARİH */
+
+.date-pill {
+  margin-top: 30px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 22px;
+  border: 1px solid rgba(255,207,50,.45);
+  border-radius: 50px;
+  background: rgba(0,0,0,.38);
+  color: white;
+  font-size: clamp(12px, 1.3vw, 17px);
+  font-weight: bold;
+}
+
+.date-pill strong {
+  color: var(--yellow);
+}
+
+/* ALT ŞERİT */
+
+.footer {
+  position: absolute;
+  z-index: 2;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 17px 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  color: rgba(255,255,255,.62);
+  font-size: clamp(9px, 1vw, 13px);
+  letter-spacing: 1px;
+  border-top: 1px solid rgba(255,255,255,.1);
+  background: rgba(0,0,0,.38);
+}
+
+.footer strong {
+  color: var(--yellow);
+}
+
+/* VİDEO EKRANI */
+
+.video-page {
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #000;
+}
+
+.video-page.active {
+  display: flex;
+}
+
+.video-header {
+  position: absolute;
+  z-index: 7;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 18px 4%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(
+    180deg,
+    rgba(0,0,0,.8),
+    transparent
+  );
+  transition: opacity .3s;
+}
+
+.video-header strong {
+  font-size: clamp(14px, 2vw, 25px);
+  letter-spacing: 2px;
+}
+
+.video-header strong span {
+  color: var(--yellow);
+}
+
+.video-header button,
+.play-button {
+  border: 1px solid rgba(255,207,50,.6);
+  border-radius: 8px;
+  padding: 12px 20px;
+  background: rgba(100,0,0,.8);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.video-header button:focus,
+.play-button:focus {
+  outline: 3px solid white;
+  outline-offset: 3px;
+}
+
+#player {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+}
+
+.video-message {
+  position: absolute;
+  z-index: 8;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(90%, 520px);
+  text-align: center;
+  padding: 30px;
+  border: 1px solid rgba(255,207,50,.4);
+  border-radius: 16px;
+  background: rgba(15,0,0,.96);
+}
+
+.video-message h2 {
+  color: var(--yellow);
+  margin-top: 0;
+}
+
+.video-message p {
+  line-height: 1.7;
+  color: #ddd;
+}
+
+.video-message .play-button {
+  margin-top: 10px;
+}
+
+.video-message.hidden {
+  display: none;
+}
+
+.notice {
+  color: #aaa;
+  font-size: 12px;
+  margin-top: 15px;
+}
+
+/* TV VE KÜÇÜK EKRAN UYUMU */
+
+@media (max-height: 600px) {
+  .header {
+    padding: 13px 4%;
+  }
+
+  .countdown-page {
+    padding: 65px 15px 45px;
+  }
+
+  .eyebrow {
+    margin-bottom: 10px;
+  }
+
+  .subtitle {
+    margin-top: 10px;
+  }
+
+  .timer {
+    margin-top: 20px;
+  }
+
+  .timer-box {
+    padding: 10px 5px;
+  }
+
+  .date-pill {
+    margin-top: 15px;
+    padding: 8px 15px;
+  }
+
+  .footer {
+    padding: 10px 4%;
+  }
+}
+
+@media (max-width: 600px) {
+  .header {
+    padding: 18px 5%;
+  }
+
+  .brand {
+    letter-spacing: 1px;
+  }
+
+  .timer {
+    gap: 6px;
+    margin-top: 25px;
+  }
+
+  .timer-box {
+    border-radius: 8px;
+  }
+
+  .label {
+    letter-spacing: 1px;
+  }
+
+  .footer {
+    padding: 12px 4%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="screen">
+
+  <div class="background"></div>
+  <div class="light red"></div>
+  <div class="light yellow"></div>
+
+  <!-- ÜST BAŞLIK -->
+
+  <header class="header">
+    <div class="brand">GS<span>HD</span> <span>VIP</span></div>
+
+    <div class="live">
+      <span class="live-dot"></span>
+      YAYIN EKRANI
+    </div>
+  </header>
+
+  <!-- GERİ SAYIM -->
+
+  <main class="countdown-page" id="countdownPage">
+
+    <div class="eyebrow">BÜYÜK BULUŞMAYA</div>
+
+    <h1>
+      GERİ SAYIM<br>
+      <span class="highlight">BAŞLADI</span>
+    </h1>
+
+    <div class="subtitle">
+      HEYECANA HAZIR OL
+    </div>
+
+    <div class="timer">
+
+      <div class="timer-box">
+        <span class="number" id="days">00</span>
+        <span class="label">GÜN</span>
+      </div>
+
+      <div class="timer-box">
+        <span class="number" id="hours">00</span>
+        <span class="label">SAAT</span>
+      </div>
+
+      <div class="timer-box">
+        <span class="number" id="minutes">00</span>
+        <span class="label">DAKİKA</span>
+      </div>
+
+      <div class="timer-box">
+        <span class="number" id="seconds">00</span>
+        <span class="label">SANİYE</span>
+      </div>
+
+    </div>
+
+    <div class="date-pill">
+      📅 <strong>26 EKİM 2026</strong>
+      <span>•</span>
+      🕘 <strong>21:00</strong>
+    </div>
+
+  </main>
+
+  <!-- ALT ŞERİT -->
+
+  <footer class="footer">
+    <span><strong>GSHD VIP</strong> • ÖZEL YAYIN</span>
+    <span>GERİ SAYIM EKRANI</span>
+  </footer>
+
+  <!-- VİDEO OYNATICI -->
+
+  <section class="video-page" id="videoPage">
+
+    <div class="video-header" id="videoHeader">
+      <strong>GS<span>HD</span> VIP • CANLI EKRAN</strong>
+      <button id="fullscreenBtn" type="button">⛶ TAM EKRAN</button>
+    </div>
+
+    <video
+      id="player"
+      controls
+      playsinline
+      preload="auto"
+      tabindex="0"
+    ></video>
+
+    <div class="video-message" id="videoMessage">
+      <h2>YAYIN BAŞLIYOR</h2>
+      <p id="videoInfo">
+        Geri sayım tamamlandı. Videoyu başlatmak için aşağıdaki butona bas.
+      </p>
+      <button class="play-button" id="playBtn" type="button">
+        ▶ VİDEOYU BAŞLAT
+      </button>
+      <div class="notice">
+        Video bağlantısını HTML dosyasına eklemeyi unutma.
+      </div>
+    </div>
+
+  </section>
+
+</div>
+
+<script>
+/* ==========================================
+   GSHD VIP - AYARLAR
+   ========================================== */
+
+/*
+  BURAYA DOĞRUDAN VİDEO LİNKİNİ EKLE.
+
+  Örnek:
+  const VIDEO_URL = "https://site.com/video.mp4";
+
+  En uyumlu başlangıç seçeneği MP4 (H.264/AAC).
+  M3U8 bağlantıları için tarayıcı desteği değişebilir.
+*/
+
+const VIDEO_URL = "VIDEO_LINKINI_BURAYA.mp4";
+
+/*
+  Türkiye saati UTC+3.
+  Hedef: 26 Ekim 2026, 21:00.
+*/
+
+const TARGET_DATE = new Date("2026-10-26T21:00:00+03:00");
+
+const $ = id => document.getElementById(id);
+
+const countdownPage = $("countdownPage");
+const videoPage = $("videoPage");
+const player = $("player");
+const videoMessage = $("videoMessage");
+const videoInfo = $("videoInfo");
+const playBtn = $("playBtn");
+const fullscreenBtn = $("fullscreenBtn");
+
+let videoOpened = false;
+
+/* GERİ SAYIM */
+
+function updateCountdown() {
+  const now = Date.now();
+  const remaining = TARGET_DATE.getTime() - now;
+
+  if (remaining <= 0) {
+    $("days").textContent = "00";
+    $("hours").textContent = "00";
+    $("minutes").textContent = "00";
+    $("seconds").textContent = "00";
+
+    openVideo();
+    return;
+  }
+
+  const totalSeconds = Math.floor(remaining / 1000);
+
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  $("days").textContent = String(days).padStart(2, "0");
+  $("hours").textContent = String(hours).padStart(2, "0");
+  $("minutes").textContent = String(minutes).padStart(2, "0");
+  $("seconds").textContent = String(seconds).padStart(2, "0");
+}
+
+/* VİDEO EKRANINI AÇ */
+
+function openVideo() {
+  if (videoOpened) return;
+
+  videoOpened = true;
+
+  countdownPage.classList.add("hidden");
+  videoPage.classList.add("active");
+
+  if (
+    !VIDEO_URL ||
+    VIDEO_URL === "VIDEO_LINKINI_BURAYA.mp4"
+  ) {
+    videoInfo.textContent =
+      "Geri sayım tamamlandı. Video bağlantısını HTML kodunun üst kısmındaki VIDEO_URL alanına eklemelisin.";
+
+    playBtn.textContent = "VİDEO BAĞLANTISI BEKLENİYOR";
+    playBtn.disabled = true;
+    playBtn.style.opacity = ".55";
+
+    return;
+  }
+
+  player.src = VIDEO_URL;
+  player.load();
+
+  /*
+    TV tarayıcısı izin verirse otomatik oynatmayı dener.
+    İzin verilmezse kullanıcı kumandayla başlatabilir.
+  */
+
+  const promise = player.play();
+
+  if (promise && typeof promise.catch === "function") {
+    promise.then(() => {
+      videoMessage.classList.add("hidden");
+    }).catch(() => {
+      videoInfo.textContent =
+        "Yayın hazır. Başlatmak için kumandadan OK tuşuna bas.";
+
+      playBtn.textContent = "▶ VİDEOYU BAŞLAT";
+      playBtn.disabled = false;
+      playBtn.style.opacity = "1";
+    });
+  }
+}
+
+/* VİDEOYU BAŞLAT */
+
+function startVideo() {
+  if (!player.src) {
+    if (
+      !VIDEO_URL ||
+      VIDEO_URL === "VIDEO_LINKINI_BURAYA.mp4"
+    ) {
+      videoInfo.textContent =
+        "Önce HTML kodundaki VIDEO_URL alanına doğrudan video bağlantısını ekle.";
+      return;
+    }
+
+    player.src = VIDEO_URL;
+  }
+
+  player.play().then(() => {
+    videoMessage.classList.add("hidden");
+  }).catch(() => {
+    videoInfo.textContent =
+      "Video başlatılamadı. Bağlantıyı ve televizyonun video formatı desteğini kontrol et.";
+  });
+}
+
+playBtn.addEventListener("click", startVideo);
+
+/* TAM EKRAN */
+
+async function toggleFullscreen() {
+  try {
+    if (document.fullscreenElement) {
+      await document.exitFullscreen();
+    } else if (document.documentElement.requestFullscreen) {
+      await document.documentElement.requestFullscreen();
+    } else if (player.webkitEnterFullscreen) {
+      player.webkitEnterFullscreen();
+    }
+  } catch (error) {
+    /* Bazı TV tarayıcıları tam ekran API'sini desteklemeyebilir. */
+  }
+}
+
+fullscreenBtn.addEventListener("click", toggleFullscreen);
+
+/* TV KUMANDASI */
+
+document.addEventListener("keydown", function(event) {
+  const key = event.key;
+  const active = document.activeElement;
+
+  if (
+    key === "Enter" ||
+    key === " " ||
+    key === "MediaPlayPause"
+  ) {
+    if (videoPage.classList.contains("active")) {
+      if (active === fullscreenBtn) {
+        event.preventDefault();
+        toggleFullscreen();
+        return;
+      }
+
+      if (active === playBtn && !playBtn.disabled) {
+        event.preventDefault();
+        startVideo();
+        return;
+      }
+
+      if (active !== fullscreenBtn && active !== playBtn) {
+        event.preventDefault();
+
+        if (player.paused) {
+          startVideo();
+        } else {
+          player.pause();
+        }
+      }
+    }
+  }
+
+  if (key === "MediaPlay") {
+    event.preventDefault();
+    startVideo();
+  }
+
+  if (key === "MediaPause") {
+    event.preventDefault();
+    player.pause();
+  }
+
+  if (key === "MediaStop") {
+    player.pause();
+    try {
+      player.currentTime = 0;
+    } catch (error) {}
+  }
+});
+
+/* VİDEO DURUMU */
+
+player.addEventListener("playing", function() {
+  videoMessage.classList.add("hidden");
+});
+
+player.addEventListener("error", function() {
+  if (videoPage.classList.contains("active")) {
+    videoMessage.classList.remove("hidden");
+    videoInfo.textContent =
+      "Video yüklenemedi. Bağlantının doğrudan bir video dosyasına işaret ettiğini ve TV'nin bu formatı desteklediğini kontrol et.";
+    playBtn.textContent = "▶ TEKRAR DENE";
+    playBtn.disabled = false;
+    playBtn.style.opacity = "1";
+  }
+});
+
+/* SAYFAYI HER AÇIŞTA DOĞRU DURUMA GETİR */
+
+updateCountdown();
+setInterval(updateCountdown, 250);
+
+/* TV BOŞTA KALDIĞINDA ZAMANLAYICI KONTROLÜ */
+
+document.addEventListener("visibilitychange", function() {
+  if (!document.hidden) {
+    updateCountdown();
+  }
+});
+</script>
+
+</body>
+</html>
