@@ -1,840 +1,891 @@
-<!DOCTYPE html>
-<html lang="tr">
+<!DOCTYPE html><html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <meta name="theme-color" content="#080000">
-<title>GSHD | VIP TV</title>
-
-<style>
+<title>GSHD VIP</title><link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet"><style>
 :root {
-  --red: #d50024;
-  --yellow: #ffcf32;
-  --black: #080000;
+  --yellow: #ffcf00;
+  --red: #e60026;
+  --dark: #080000;
+  --panel: rgba(15, 0, 0, .94);
 }
 
 * {
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
 html, body {
   width: 100%;
   height: 100%;
   margin: 0;
-  background: var(--black);
-  color: white;
-  font-family: Arial, Helvetica, sans-serif;
   overflow: hidden;
+  background: var(--dark);
+  color: #fff;
+  font-family: Inter, Arial, sans-serif;
 }
 
 body {
-  min-height: 100vh;
+  position: relative;
   min-height: 100dvh;
 }
 
-.screen {
-  position: fixed;
-  inset: 0;
+button {
+  font: inherit;
+}
+
+#app {
+  position: relative;
   width: 100%;
   height: 100%;
-  background: #080000;
+  min-height: 100dvh;
   overflow: hidden;
+  background:
+    radial-gradient(ellipse at top, rgba(230,0,38,.24), transparent 55%),
+    linear-gradient(145deg, #160000, #050000 75%);
 }
 
-/* ARKA PLAN FOTOĞRAFI */
-
-.background {
+.ambient {
   position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(
-      90deg,
-      rgba(10,0,0,.88),
-      rgba(10,0,0,.32),
-      rgba(10,0,0,.78)
-    ),
-    linear-gradient(
-      0deg,
-      rgba(0,0,0,.9),
-      transparent 65%
-    ),
-    url("https://raw.githubusercontent.com/GSHDapk/Logolar/refs/heads/main/file_00000000004081f4883457b1b87cc98d.png");
-
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-
-  transform: scale(1.03);
-  animation: backgroundZoom 20s ease-in-out infinite alternate;
-}
-
-@keyframes backgroundZoom {
-  from { transform: scale(1.03); }
-  to { transform: scale(1.12); }
-}
-
-/* RENKLİ IŞIKLAR */
-
-.light {
-  position: absolute;
-  width: 45vw;
-  height: 45vw;
-  border-radius: 50%;
-  filter: blur(100px);
-  opacity: .20;
+  inset: -20%;
   pointer-events: none;
+  background:
+    radial-gradient(ellipse at 15% 20%, rgba(255,207,0,.13), transparent 32%),
+    radial-gradient(ellipse at 85% 70%, rgba(230,0,38,.23), transparent 36%);
+  animation: ambientMove 9s ease-in-out infinite alternate;
 }
 
-.light.red {
-  background: #e00026;
-  left: -15%;
-  top: 15%;
+@keyframes ambientMove {
+  from { transform: scale(1) translate(0,0); }
+  to { transform: scale(1.1) translate(-1%,1%); }
 }
 
-.light.yellow {
-  background: #ffbf00;
-  right: -15%;
-  bottom: -15%;
-}
-
-/* ÜST BÖLÜM */
-
-.header {
+.topbar {
   position: absolute;
-  z-index: 2;
+  z-index: 5;
   top: 0;
   left: 0;
   width: 100%;
-  padding: 25px 5%;
+  height: 70px;
+  padding: 0 22px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid rgba(255,255,255,.13);
-  background: linear-gradient(
-    180deg,
-    rgba(0,0,0,.65),
-    transparent
-  );
+  background: linear-gradient(to bottom, rgba(0,0,0,.86), transparent);
 }
 
 .brand {
-  font-size: clamp(18px, 2.4vw, 34px);
   font-weight: 900;
-  letter-spacing: 3px;
+  font-size: clamp(18px, 2.6vw, 27px);
+  letter-spacing: 1px;
+  white-space: nowrap;
 }
 
 .brand span {
   color: var(--yellow);
 }
 
-.live {
-  display: flex;
+.live-badge {
+  display: inline-flex;
   align-items: center;
-  gap: 9px;
-  font-size: clamp(11px, 1.2vw, 16px);
-  font-weight: bold;
-  letter-spacing: 2px;
+  gap: 7px;
+  border: 1px solid rgba(255,207,0,.5);
+  border-radius: 30px;
+  padding: 7px 12px;
+  background: rgba(0,0,0,.5);
+  color: var(--yellow);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
 }
 
 .live-dot {
-  width: 9px;
-  height: 9px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background: var(--red);
-  box-shadow: 0 0 15px var(--red);
-  animation: blink 1.2s infinite;
+  box-shadow: 0 0 12px var(--red);
+  animation: pulse 1.2s infinite;
 }
 
-@keyframes blink {
-  50% { opacity: .3; }
+@keyframes pulse {
+  50% { opacity: .35; }
 }
 
-/* GERİ SAYIM ALANI */
-
-.countdown-page {
+.screen {
   position: absolute;
-  z-index: 1;
   inset: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 100px 20px 55px;
-  text-align: center;
-  transition: opacity .8s ease, visibility .8s ease;
+  display: none;
 }
 
-.countdown-page.hidden {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
+.screen.active {
+  display: flex;
+}
+
+/* GERİ SAYIM EKRANI */
+
+#countdownScreen {
+  align-items: center;
+  justify-content: center;
+  padding: 75px 18px 24px;
+}
+
+.countdown-layout {
+  width: min(1050px, 100%);
+  height: min(680px, 100%);
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  justify-items: center;
+  position: relative;
+  isolation: isolate;
+}
+
+.background-photo {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  overflow: hidden;
+  border-radius: 22px;
+  background: #120000;
+}
+
+.background-photo img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  object-position: center;
+}
+
+.background-photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.72), rgba(0,0,0,.25), rgba(0,0,0,.72)),
+    linear-gradient(0deg, rgba(0,0,0,.9), transparent 65%);
+}
+
+.countdown-content {
+  width: min(720px, 100%);
+  padding: clamp(18px, 4vw, 42px);
+  text-align: center;
 }
 
 .eyebrow {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
+  padding: 8px 14px;
+  border: 1px solid rgba(255,207,0,.55);
+  border-radius: 30px;
+  background: rgba(0,0,0,.55);
   color: var(--yellow);
-  font-size: clamp(11px, 1.3vw, 17px);
+  font-size: clamp(10px, 1.5vw, 13px);
   font-weight: 800;
-  letter-spacing: clamp(2px, .5vw, 6px);
-  text-transform: uppercase;
-  margin-bottom: 20px;
+  letter-spacing: 2px;
 }
 
-.eyebrow::before,
-.eyebrow::after {
-  content: "";
-  width: 35px;
-  height: 2px;
-  background: var(--red);
-}
-
-h1 {
-  margin: 0;
-  font-size: clamp(28px, 5.4vw, 76px);
+.main-title {
+  margin: 20px 0 8px;
+  font-size: clamp(34px, 7vw, 76px);
+  line-height: .98;
   font-weight: 900;
-  line-height: 1.08;
-  letter-spacing: -1px;
-  text-shadow: 0 5px 35px rgba(0,0,0,.8);
+  letter-spacing: -2px;
+  text-transform: uppercase;
+  text-shadow: 0 5px 25px #000;
 }
 
-h1 .highlight {
+.main-title span {
+  display: block;
   color: var(--yellow);
 }
 
 .subtitle {
-  margin-top: 18px;
-  font-size: clamp(12px, 1.5vw, 20px);
-  color: rgba(255,255,255,.78);
-  letter-spacing: 2px;
+  margin: 16px auto 24px;
+  color: rgba(255,255,255,.85);
+  font-size: clamp(12px, 2vw, 16px);
+  line-height: 1.6;
 }
 
-/* SAYAÇ KUTULARI */
-
-.timer {
-  display: flex;
-  justify-content: center;
-  gap: clamp(8px, 2vw, 25px);
-  margin-top: 38px;
-  width: 100%;
-  max-width: 800px;
+.countdown {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(6px, 1.5vw, 13px);
+  width: min(580px, 100%);
+  margin: 0 auto;
 }
 
-.timer-box {
-  flex: 1;
-  max-width: 155px;
+.time-box {
   min-width: 0;
-  padding: clamp(13px, 2.2vw, 27px) 5px;
-  border: 1px solid rgba(255,255,255,.18);
-  border-radius: 12px;
-  background: rgba(10,0,0,.64);
-  box-shadow: 0 10px 35px rgba(0,0,0,.2);
-  position: relative;
-  overflow: hidden;
+  padding: clamp(12px, 2.2vw, 22px) 4px;
+  border-radius: 13px;
+  border: 1px solid rgba(255,207,0,.45);
+  background: linear-gradient(145deg, rgba(230,0,38,.8), rgba(45,0,0,.94));
+  box-shadow: 0 8px 24px rgba(0,0,0,.3);
 }
 
-.timer-box::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 3px;
-  background: linear-gradient(90deg, var(--red), var(--yellow));
-}
-
-.number {
-  display: block;
-  font-size: clamp(30px, 5vw, 65px);
+.time-number {
+  color: var(--yellow);
+  font-size: clamp(23px, 5vw, 46px);
+  line-height: 1;
   font-weight: 900;
   font-variant-numeric: tabular-nums;
-  line-height: 1.1;
-  color: white;
-  text-shadow: 0 0 25px rgba(255,207,50,.16);
 }
 
-.label {
-  display: block;
-  margin-top: 10px;
-  font-size: clamp(9px, 1vw, 13px);
-  color: var(--yellow);
+.time-label {
+  margin-top: 9px;
+  font-size: clamp(8px, 1.4vw, 11px);
+  color: #fff;
   font-weight: 800;
-  letter-spacing: 2px;
-}
-
-/* TARİH */
-
-.date-pill {
-  margin-top: 30px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 22px;
-  border: 1px solid rgba(255,207,50,.45);
-  border-radius: 50px;
-  background: rgba(0,0,0,.38);
-  color: white;
-  font-size: clamp(12px, 1.3vw, 17px);
-  font-weight: bold;
-}
-
-.date-pill strong {
-  color: var(--yellow);
-}
-
-/* ALT ŞERİT */
-
-.footer {
-  position: absolute;
-  z-index: 2;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  padding: 17px 5%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-  color: rgba(255,255,255,.62);
-  font-size: clamp(9px, 1vw, 13px);
   letter-spacing: 1px;
-  border-top: 1px solid rgba(255,255,255,.1);
-  background: rgba(0,0,0,.38);
 }
 
-.footer strong {
-  color: var(--yellow);
+.countdown-note {
+  margin-top: 18px;
+  font-size: 11px;
+  color: rgba(255,255,255,.68);
 }
 
 /* VİDEO EKRANI */
 
-.video-page {
-  position: absolute;
-  z-index: 5;
-  inset: 0;
-  display: none;
+#playerScreen {
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
   background: #000;
 }
 
-.video-page.active {
-  display: flex;
-}
-
-.video-header {
-  position: absolute;
-  z-index: 7;
-  top: 0;
-  left: 0;
+.player-topbar {
+  z-index: 4;
+  flex: 0 0 auto;
   width: 100%;
-  padding: 18px 4%;
+  min-height: 54px;
+  padding: 9px 15px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  background: linear-gradient(
-    180deg,
-    rgba(0,0,0,.8),
-    transparent
-  );
-  transition: opacity .3s;
+  justify-content: space-between;
+  gap: 12px;
+  background: linear-gradient(180deg, rgba(0,0,0,.95), rgba(0,0,0,.65));
 }
 
-.video-header strong {
-  font-size: clamp(14px, 2vw, 25px);
-  letter-spacing: 2px;
+.player-title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: clamp(13px, 2vw, 18px);
+  font-weight: 900;
 }
 
-.video-header strong span {
+.player-title span {
   color: var(--yellow);
 }
 
-.video-header button,
-.play-button {
-  border: 1px solid rgba(255,207,50,.6);
-  border-radius: 8px;
-  padding: 12px 20px;
-  background: rgba(100,0,0,.8);
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  font-size: 15px;
+.player-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
-.video-header button:focus,
-.play-button:focus {
-  outline: 3px solid white;
+.action-btn {
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid rgba(255,207,0,.55);
+  border-radius: 8px;
+  background: linear-gradient(135deg, #e60026, #760013);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.action-btn:focus-visible,
+.action-btn:focus {
+  outline: 2px solid var(--yellow);
   outline-offset: 3px;
 }
 
+.video-area {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  background: #000;
+  overflow: hidden;
+}
+
+/* ÖNEMLİ: OYNATICI object-fit: fill */
 #player {
+  display: block;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: fill;
   background: #000;
+  border: 0;
 }
 
-.video-message {
+#player:focus {
+  outline: none;
+}
+
+#playerMessage {
   position: absolute;
-  z-index: 8;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: min(90%, 520px);
-  text-align: center;
-  padding: 30px;
-  border: 1px solid rgba(255,207,50,.4);
-  border-radius: 16px;
-  background: rgba(15,0,0,.96);
-}
-
-.video-message h2 {
-  color: var(--yellow);
-  margin-top: 0;
-}
-
-.video-message p {
-  line-height: 1.7;
-  color: #ddd;
-}
-
-.video-message .play-button {
-  margin-top: 10px;
-}
-
-.video-message.hidden {
+  inset: 0;
   display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 25px;
+  text-align: center;
+  background: rgba(0,0,0,.9);
+  z-index: 2;
 }
 
-.notice {
-  color: #aaa;
-  font-size: 12px;
-  margin-top: 15px;
+#playerMessage.visible {
+  display: flex;
 }
 
-/* TV VE KÜÇÜK EKRAN UYUMU */
+.message-card {
+  width: min(520px, 100%);
+  padding: 26px;
+  border: 1px solid rgba(255,207,0,.4);
+  border-radius: 15px;
+  background: linear-gradient(145deg, #260000, #080000);
+}
 
-@media (max-height: 600px) {
-  .header {
-    padding: 13px 4%;
+.message-card h2 {
+  margin: 0 0 12px;
+  color: var(--yellow);
+  font-size: clamp(20px, 4vw, 30px);
+}
+
+.message-card p {
+  margin: 0 0 18px;
+  color: rgba(255,255,255,.8);
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.message-card button {
+  border: 0;
+  border-radius: 9px;
+  padding: 12px 20px;
+  background: linear-gradient(90deg, var(--yellow), #ff9e00);
+  color: #170000;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.footer-line {
+  flex: 0 0 auto;
+  min-height: 28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px 10px;
+  background: #080000;
+  color: rgba(255,255,255,.55);
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+/* YATAY EKRAN */
+
+@media (orientation: landscape) {
+  .topbar {
+    height: 48px;
+    padding: 0 16px;
   }
 
-  .countdown-page {
-    padding: 65px 15px 45px;
+  #countdownScreen {
+    padding: 48px 14px 12px;
   }
 
-  .eyebrow {
-    margin-bottom: 10px;
+  .countdown-layout {
+    width: min(1100px, 100%);
+    height: 100%;
+  }
+
+  .countdown-content {
+    padding: 12px;
+  }
+
+  .main-title {
+    margin: 10px 0 5px;
+    font-size: clamp(30px, 6vh, 58px);
   }
 
   .subtitle {
+    margin: 8px auto 14px;
+    font-size: clamp(11px, 2vh, 14px);
+  }
+
+  .countdown {
+    width: min(500px, 100%);
+    gap: 8px;
+  }
+
+  .time-box {
+    padding: 10px 3px;
+  }
+
+  .time-number {
+    font-size: clamp(22px, 5vh, 38px);
+  }
+
+  .time-label {
+    margin-top: 5px;
+  }
+
+  .countdown-note {
     margin-top: 10px;
   }
 
-  .timer {
-    margin-top: 20px;
+  .player-topbar {
+    min-height: 44px;
+    padding: 5px 12px;
   }
 
-  .timer-box {
-    padding: 10px 5px;
+  .action-btn {
+    min-height: 31px;
   }
 
-  .date-pill {
-    margin-top: 15px;
-    padding: 8px 15px;
-  }
-
-  .footer {
-    padding: 10px 4%;
+  .footer-line {
+    min-height: 20px;
   }
 }
 
-@media (max-width: 600px) {
-  .header {
-    padding: 18px 5%;
+@media (max-width: 480px) and (orientation: portrait) {
+  .topbar {
+    height: 58px;
+    padding: 0 13px;
   }
 
-  .brand {
-    letter-spacing: 1px;
+  #countdownScreen {
+    padding: 60px 10px 14px;
   }
 
-  .timer {
+  .countdown-layout {
+    height: 100%;
+  }
+
+  .background-photo {
+    border-radius: 14px;
+  }
+
+  .countdown-content {
+    padding: 16px 10px;
+  }
+
+  .main-title {
+    letter-spacing: -1px;
+  }
+
+  .countdown {
+    gap: 5px;
+  }
+
+  .time-box {
+    border-radius: 9px;
+    padding: 13px 2px;
+  }
+
+  .time-label {
+    letter-spacing: 0;
+  }
+
+  .player-topbar {
     gap: 6px;
-    margin-top: 25px;
+    padding: 8px;
   }
 
-  .timer-box {
-    border-radius: 8px;
-  }
-
-  .label {
-    letter-spacing: 1px;
-  }
-
-  .footer {
-    padding: 12px 4%;
+  .action-btn {
+    padding: 0 8px;
+    font-size: 10px;
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: .01ms !important;
-    transition-duration: .01ms !important;
+@media (max-height: 420px) and (orientation: landscape) {
+  .player-topbar {
+    min-height: 36px;
+  }
+
+  .footer-line {
+    display: none;
   }
 }
-</style>
-</head>
 
-<body>
+:fullscreen #playerScreen {
+  width: 100%;
+  height: 100%;
+}
 
-<div class="screen">
+#playerScreen:fullscreen .player-topbar,
+#playerScreen:fullscreen .footer-line {
+  display: none;
+}
 
-  <div class="background"></div>
-  <div class="light red"></div>
-  <div class="light yellow"></div>
+#playerScreen:fullscreen .video-area {
+  width: 100%;
+  height: 100%;
+}
 
-  <!-- ÜST BAŞLIK -->
-
-  <header class="header">
-    <div class="brand">GS<span>HD</span> <span>VIP</span></div>
-
-    <div class="live">
+.hidden {
+  display: none !important;
+}
+</style></head><body>
+<div id="app">
+  <div class="ambient"></div>  <header class="topbar">
+    <div class="brand">GSHD <span>VIP</span></div>
+    <div class="live-badge">
       <span class="live-dot"></span>
-      YAYIN EKRANI
+      <span>YAYIN MERKEZİ</span>
     </div>
-  </header>
+  </header>  <!-- GERİ SAYIM -->  <main id="countdownScreen" class="screen active">
+    <section class="countdown-layout">
+      <div class="background-photo">
+        <img
+          src="https://raw.githubusercontent.com/GSHDapk/Logolar/refs/heads/main/file_00000000004081f4883457b1b87cc98d.png"
+          alt=""
+        >
+      </div>  <div class="countdown-content">
+    <div class="eyebrow">★ GSHD VIP ÖZEL YAYIN ★</div>
 
-  <!-- GERİ SAYIM -->
-
-  <main class="countdown-page" id="countdownPage">
-
-    <div class="eyebrow">BÜYÜK BULUŞMAYA</div>
-
-    <h1>
-      GERİ SAYIM<br>
-      <span class="highlight">BAŞLADI</span>
+    <h1 class="main-title">
+      YAYIN
+      <span>BAŞLIYOR</span>
     </h1>
 
-    <div class="subtitle">
-      HEYECANA HAZIR OL
-    </div>
+    <p class="subtitle">
+      Yayının başlamasına kalan süre
+    </p>
 
-    <div class="timer">
-
-      <div class="timer-box">
-        <span class="number" id="days">00</span>
-        <span class="label">GÜN</span>
+    <div class="countdown">
+      <div class="time-box">
+        <div class="time-number" id="days">00</div>
+        <div class="time-label">GÜN</div>
       </div>
-
-      <div class="timer-box">
-        <span class="number" id="hours">00</span>
-        <span class="label">SAAT</span>
+      <div class="time-box">
+        <div class="time-number" id="hours">00</div>
+        <div class="time-label">SAAT</div>
       </div>
-
-      <div class="timer-box">
-        <span class="number" id="minutes">00</span>
-        <span class="label">DAKİKA</span>
+      <div class="time-box">
+        <div class="time-number" id="minutes">00</div>
+        <div class="time-label">DAKİKA</div>
       </div>
-
-      <div class="timer-box">
-        <span class="number" id="seconds">00</span>
-        <span class="label">SANİYE</span>
-      </div>
-
-    </div>
-
-    <div class="date-pill">
-      📅 <strong>26 EKİM 2026</strong>
-      <span>•</span>
-      🕘 <strong>21:00</strong>
-    </div>
-
-  </main>
-
-  <!-- ALT ŞERİT -->
-
-  <footer class="footer">
-    <span><strong>GSHD VIP</strong> • ÖZEL YAYIN</span>
-    <span>GERİ SAYIM EKRANI</span>
-  </footer>
-
-  <!-- VİDEO OYNATICI -->
-
-  <section class="video-page" id="videoPage">
-
-    <div class="video-header" id="videoHeader">
-      <strong>GS<span>HD</span> VIP • CANLI EKRAN</strong>
-      <button id="fullscreenBtn" type="button">⛶ TAM EKRAN</button>
-    </div>
-
-    <video
-      id="player"
-      controls
-      playsinline
-      preload="auto"
-      tabindex="0"
-    ></video>
-
-    <div class="video-message" id="videoMessage">
-      <h2>YAYIN BAŞLIYOR</h2>
-      <p id="videoInfo">
-        Geri sayım tamamlandı. Videoyu başlatmak için aşağıdaki butona bas.
-      </p>
-      <button class="play-button" id="playBtn" type="button">
-        ▶ VİDEOYU BAŞLAT
-      </button>
-      <div class="notice">
-        Video bağlantısını HTML dosyasına eklemeyi unutma.
+      <div class="time-box">
+        <div class="time-number" id="seconds">00</div>
+        <div class="time-label">SANİYE</div>
       </div>
     </div>
 
-  </section>
+    <div class="countdown-note" id="countdownNote">
+      Yayın başladığında oynatıcı otomatik açılacaktır.
+    </div>
+  </div>
+</section>
 
+  </main>  <!-- VİDEO OYNATICI -->  <section id="playerScreen" class="screen">
+    <div class="player-topbar">
+      <div class="player-title">GSHD <span>VIP</span> · CANLI YAYIN</div>  <div class="player-actions">
+    <button class="action-btn" id="playButton" type="button">▶ OYNAT</button>
+    <button class="action-btn" id="fullscreenButton" type="button">⛶ TAM EKRAN</button>
+  </div>
 </div>
 
-<script>
-/* ==========================================
-   GSHD VIP - AYARLAR
-   ========================================== */
+<div class="video-area">
+  <video
+    id="player"
+    controls
+    playsinline
+    webkit-playsinline
+    preload="auto"
+    tabindex="0"
+  ></video>
 
-/*
-  BURAYA DOĞRUDAN VİDEO LİNKİNİ EKLE.
+  <div id="playerMessage">
+    <div class="message-card">
+      <h2 id="messageTitle">Yayın hazır</h2>
+      <p id="messageText">Yayını başlatmak için oynat düğmesine bas.</p>
+      <button type="button" id="messageButton">TEKRAR DENE</button>
+    </div>
+  </div>
+</div>
 
-  Örnek:
-  const VIDEO_URL = "https://site.com/video.mp4";
+<div class="footer-line">GSHD VIP · SARI KIRMIZI YAYIN DENEYİMİ</div>
 
-  En uyumlu başlangıç seçeneği MP4 (H.264/AAC).
-  M3U8 bağlantıları için tarayıcı desteği değişebilir.
-*/
+  </section>
+</div><!-- M3U8 desteği için HLS.js --><script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script><script>
+/* =====================================================
+   AYARLAR
+   ===================================================== */
 
-const VIDEO_URL = "VIDEO_LINKINI_BURAYA.mp4";
+/* Buraya M3U8 veya MP4 yayın bağlantını yaz. */
+const VIDEO_URL = "VIDEO_LINKINI_BURAYA.m3u8";
 
-/*
-  Türkiye saati UTC+3.
-  Hedef: 26 Ekim 2026, 21:00.
-*/
+/* Yayın başlangıç zamanı: Türkiye saati (UTC+3). */
+const START_TIME = "2026-10-26T21:00:00+03:00";
 
-const TARGET_DATE = new Date("2026-10-26T21:00:00+03:00");
+/* =====================================================
+   SİSTEM
+   ===================================================== */
 
-const $ = id => document.getElementById(id);
+const countdownScreen = document.getElementById("countdownScreen");
+const playerScreen = document.getElementById("playerScreen");
+const player = document.getElementById("player");
+const playerMessage = document.getElementById("playerMessage");
+const messageTitle = document.getElementById("messageTitle");
+const messageText = document.getElementById("messageText");
+const countdownNote = document.getElementById("countdownNote");
 
-const countdownPage = $("countdownPage");
-const videoPage = $("videoPage");
-const player = $("player");
-const videoMessage = $("videoMessage");
-const videoInfo = $("videoInfo");
-const playBtn = $("playBtn");
-const fullscreenBtn = $("fullscreenBtn");
+let hls = null;
+let playerConfigured = false;
+let playbackRequested = false;
 
-let videoOpened = false;
-
-/* GERİ SAYIM */
-
-function updateCountdown() {
-  const now = Date.now();
-  const remaining = TARGET_DATE.getTime() - now;
-
-  if (remaining <= 0) {
-    $("days").textContent = "00";
-    $("hours").textContent = "00";
-    $("minutes").textContent = "00";
-    $("seconds").textContent = "00";
-
-    openVideo();
-    return;
-  }
-
-  const totalSeconds = Math.floor(remaining / 1000);
-
-  const days = Math.floor(totalSeconds / 86400);
-  const hours = Math.floor((totalSeconds % 86400) / 3600);
-  const minutes = Math.floor((totalSeconds % 3600) / 60);
-  const seconds = totalSeconds % 60;
-
-  $("days").textContent = String(days).padStart(2, "0");
-  $("hours").textContent = String(hours).padStart(2, "0");
-  $("minutes").textContent = String(minutes).padStart(2, "0");
-  $("seconds").textContent = String(seconds).padStart(2, "0");
+function showMessage(title, text) {
+  messageTitle.textContent = title;
+  messageText.textContent = text;
+  playerMessage.classList.add("visible");
 }
 
-/* VİDEO EKRANINI AÇ */
+function hideMessage() {
+  playerMessage.classList.remove("visible");
+}
 
-function openVideo() {
-  if (videoOpened) return;
+function showPlayer() {
+  countdownScreen.classList.remove("active");
+  playerScreen.classList.add("active");
 
-  videoOpened = true;
+  if (!playerConfigured) {
+    configurePlayer();
+  }
 
-  countdownPage.classList.add("hidden");
-  videoPage.classList.add("active");
+  if (playbackRequested) {
+    startPlayback();
+  }
+}
+
+function configurePlayer() {
+  if (playerConfigured) return;
+  playerConfigured = true;
+
+  const url = VIDEO_URL.trim();
 
   if (
-    !VIDEO_URL ||
-    VIDEO_URL === "VIDEO_LINKINI_BURAYA.mp4"
+    !url ||
+    url === "VIDEO_LINKINI_BURAYA.m3u8" ||
+    url === "VIDEO_LINKINI_BURAYA.mp4"
   ) {
-    videoInfo.textContent =
-      "Geri sayım tamamlandı. Video bağlantısını HTML kodunun üst kısmındaki VIDEO_URL alanına eklemelisin.";
-
-    playBtn.textContent = "VİDEO BAĞLANTISI BEKLENİYOR";
-    playBtn.disabled = true;
-    playBtn.style.opacity = ".55";
-
+    showMessage(
+      "Yayın bağlantısı eklenmedi",
+      "HTML içindeki VIDEO_URL alanına M3U8 veya MP4 yayın bağlantını ekle."
+    );
     return;
   }
 
-  player.src = VIDEO_URL;
-  player.load();
+  const isM3U8 = /\.m3u8(?:$|[?#])/i.test(url);
 
-  /*
-    TV tarayıcısı izin verirse otomatik oynatmayı dener.
-    İzin verilmezse kullanıcı kumandayla başlatabilir.
-  */
-
-  const promise = player.play();
-
-  if (promise && typeof promise.catch === "function") {
-    promise.then(() => {
-      videoMessage.classList.add("hidden");
-    }).catch(() => {
-      videoInfo.textContent =
-        "Yayın hazır. Başlatmak için kumandadan OK tuşuna bas.";
-
-      playBtn.textContent = "▶ VİDEOYU BAŞLAT";
-      playBtn.disabled = false;
-      playBtn.style.opacity = "1";
-    });
-  }
-}
-
-/* VİDEOYU BAŞLAT */
-
-function startVideo() {
-  if (!player.src) {
-    if (
-      !VIDEO_URL ||
-      VIDEO_URL === "VIDEO_LINKINI_BURAYA.mp4"
-    ) {
-      videoInfo.textContent =
-        "Önce HTML kodundaki VIDEO_URL alanına doğrudan video bağlantısını ekle.";
+  if (isM3U8) {
+    /* Önce tarayıcının yerleşik HLS desteğini dene. */
+    if (player.canPlayType("application/vnd.apple.mpegurl")) {
+      player.src = url;
+      player.load();
       return;
     }
 
-    player.src = VIDEO_URL;
+    /* Yerleşik destek yoksa HLS.js kullan. */
+    if (window.Hls && Hls.isSupported()) {
+      hls = new Hls({
+        enableWorker: true,
+        lowLatencyMode: true,
+        backBufferLength: 30
+      });
+
+      hls.attachMedia(player);
+
+      hls.on(Hls.Events.MEDIA_ATTACHED, function () {
+        hls.loadSource(url);
+      });
+
+      hls.on(Hls.Events.MANIFEST_PARSED, function () {
+        hideMessage();
+        if (playbackRequested) startPlayback();
+      });
+
+      hls.on(Hls.Events.ERROR, function (event, data) {
+        if (!data.fatal) return;
+
+        if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
+          showMessage(
+            "Yayın bağlantısı kurulamadı",
+            "Bağlantıyı kontrol edip tekrar dene. Yayın sunucusu erişilebilir olmalı."
+          );
+          hls.startLoad();
+        } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
+          hls.recoverMediaError();
+        } else {
+          showMessage(
+            "Oynatma hatası",
+            "Bu yayın tarayıcı tarafından desteklenmiyor olabilir."
+          );
+          hls.destroy();
+          hls = null;
+        }
+      });
+
+      return;
+    }
+
+    showMessage(
+      "M3U8 desteği bulunamadı",
+      "Bu tarayıcı M3U8 oynatmayı desteklemiyor. HLS desteği olan bir tarayıcı veya oynatıcı kullan."
+    );
+    return;
   }
 
-  player.play().then(() => {
-    videoMessage.classList.add("hidden");
-  }).catch(() => {
-    videoInfo.textContent =
-      "Video başlatılamadı. Bağlantıyı ve televizyonun video formatı desteğini kontrol et.";
-  });
+  /* MP4 ve tarayıcının desteklediği diğer doğrudan video kaynakları. */
+  player.src = url;
+  player.load();
 }
 
-playBtn.addEventListener("click", startVideo);
+async function startPlayback() {
+  playbackRequested = true;
 
-/* TAM EKRAN */
+  if (!playerConfigured) {
+    configurePlayer();
+  }
 
-async function toggleFullscreen() {
+  if (!player.src && !hls) {
+    return;
+  }
+
   try {
-    if (document.fullscreenElement) {
+    hideMessage();
+    await player.play();
+  } catch (error) {
+    showMessage(
+      "Oynatmak için düğmeye bas",
+      "Tarayıcı otomatik oynatmayı engelledi. OYNAT düğmesine basarak yayını başlatabilirsin."
+    );
+  }
+}
+
+function updateCountdown() {
+  const target = new Date(START_TIME).getTime();
+  const now = Date.now();
+  const distance = target - now;
+
+  if (distance <= 0) {
+    ["days", "hours", "minutes", "seconds"].forEach(function (id) {
+      document.getElementById(id).textContent = "00";
+    });
+
+    countdownNote.textContent = "Yayın başladı.";
+    playbackRequested = true;
+    showPlayer();
+    startPlayback();
+    return;
+  }
+
+  const days = Math.floor(distance / 86400000);
+  const hours = Math.floor((distance % 86400000) / 3600000);
+  const minutes = Math.floor((distance % 3600000) / 60000);
+  const seconds = Math.floor((distance % 60000) / 1000);
+
+  document.getElementById("days").textContent =
+    String(days).padStart(2, "0");
+
+  document.getElementById("hours").textContent =
+    String(hours).padStart(2, "0");
+
+  document.getElementById("minutes").textContent =
+    String(minutes).padStart(2, "0");
+
+  document.getElementById("seconds").textContent =
+    String(seconds).padStart(2, "0");
+}
+
+document.getElementById("playButton").addEventListener("click", function () {
+  startPlayback();
+});
+
+document.getElementById("messageButton").addEventListener("click", function () {
+  if (hls && hls.startLoad) {
+    hls.startLoad();
+  }
+  startPlayback();
+});
+
+document.getElementById("fullscreenButton").addEventListener("click", async function () {
+  try {
+    if (!document.fullscreenElement) {
+      if (playerScreen.requestFullscreen) {
+        await playerScreen.requestFullscreen();
+      } else if (player.webkitEnterFullscreen) {
+        player.webkitEnterFullscreen();
+      }
+    } else {
       await document.exitFullscreen();
-    } else if (document.documentElement.requestFullscreen) {
-      await document.documentElement.requestFullscreen();
-    } else if (player.webkitEnterFullscreen) {
-      player.webkitEnterFullscreen();
     }
   } catch (error) {
-    /* Bazı TV tarayıcıları tam ekran API'sini desteklemeyebilir. */
+    try {
+      if (player.webkitEnterFullscreen) {
+        player.webkitEnterFullscreen();
+      }
+    } catch (e) {}
   }
-}
+});
 
-fullscreenBtn.addEventListener("click", toggleFullscreen);
+player.addEventListener("playing", hideMessage);
 
-/* TV KUMANDASI */
+player.addEventListener("error", function () {
+  if (player.error) {
+    showMessage(
+      "Video oynatılamadı",
+      "Yayın bağlantısını ve tarayıcı uyumluluğunu kontrol et."
+    );
+  }
+});
 
-document.addEventListener("keydown", function(event) {
+/* TV kumandası ve klavye desteği */
+document.addEventListener("keydown", function (event) {
   const key = event.key;
-  const active = document.activeElement;
 
   if (
     key === "Enter" ||
     key === " " ||
+    key === "MediaPlay" ||
     key === "MediaPlayPause"
   ) {
-    if (videoPage.classList.contains("active")) {
-      if (active === fullscreenBtn) {
-        event.preventDefault();
-        toggleFullscreen();
-        return;
-      }
+    if (document.activeElement === document.getElementById("playButton")) {
+      startPlayback();
+      event.preventDefault();
+      return;
+    }
 
-      if (active === playBtn && !playBtn.disabled) {
-        event.preventDefault();
-        startVideo();
-        return;
+    if (playerScreen.classList.contains("active")) {
+      if (player.paused) {
+        startPlayback();
+      } else if (key !== "Enter") {
+        player.pause();
       }
-
-      if (active !== fullscreenBtn && active !== playBtn) {
-        event.preventDefault();
-
-        if (player.paused) {
-          startVideo();
-        } else {
-          player.pause();
-        }
-      }
+      event.preventDefault();
     }
   }
 
-  if (key === "MediaPlay") {
-    event.preventDefault();
-    startVideo();
-  }
-
-  if (key === "MediaPause") {
-    event.preventDefault();
+  if (key === "MediaStop" && playerScreen.classList.contains("active")) {
     player.pause();
   }
 
-  if (key === "MediaStop") {
-    player.pause();
-    try {
-      player.currentTime = 0;
-    } catch (error) {}
+  if (key === "f" || key === "F") {
+    document.getElementById("fullscreenButton").click();
   }
 });
-
-/* VİDEO DURUMU */
-
-player.addEventListener("playing", function() {
-  videoMessage.classList.add("hidden");
-});
-
-player.addEventListener("error", function() {
-  if (videoPage.classList.contains("active")) {
-    videoMessage.classList.remove("hidden");
-    videoInfo.textContent =
-      "Video yüklenemedi. Bağlantının doğrudan bir video dosyasına işaret ettiğini ve TV'nin bu formatı desteklediğini kontrol et.";
-    playBtn.textContent = "▶ TEKRAR DENE";
-    playBtn.disabled = false;
-    playBtn.style.opacity = "1";
-  }
-});
-
-/* SAYFAYI HER AÇIŞTA DOĞRU DURUMA GETİR */
 
 updateCountdown();
-setInterval(updateCountdown, 250);
-
-/* TV BOŞTA KALDIĞINDA ZAMANLAYICI KONTROLÜ */
-
-document.addEventListener("visibilitychange", function() {
-  if (!document.hidden) {
-    updateCountdown();
-  }
-});
-</script>
-
-</body>
+setInterval(updateCountdown, 1000);
+</script></body>
 </html>
