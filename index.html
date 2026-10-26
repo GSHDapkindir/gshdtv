@@ -1,883 +1,125 @@
 <!DOCTYPE html><html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<meta name="theme-color" content="#080000">
-<title>GSHD VIP</title><link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet"><style>
-:root {
-  --yellow: #ffcf00;
-  --red: #e60026;
-  --black: #080000;
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>GSHD CANLI YAYIN</title>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1"></script>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;min-height:100vh;display:flex;align-items:center;
+ justify-content:center;padding:14px;background:#090609;color:white;
+ font-family:Arial,sans-serif;
+ background-image:radial-gradient(ellipse at top left,#650018 0,transparent 55%),radial-gradient(ellipse at bottom right,#5a4700 0,transparent 50%);
+}
+.main{width:100%;max-width:1000px;text-align:center}
+h1{margin:0 0 6px;font-size:30px;font-weight:900;letter-spacing:4px;color:#ffcf00;text-shadow:0 0 15px #ff003c}
+.subtitle{font-size:11px;letter-spacing:3px;color:#eee;margin-bottom:18px}
+.player{
+ position:relative;width:100%;aspect-ratio:16/9;background:#000;
+ border:2px solid #ffcf00;border-radius:13px;overflow:hidden;
+ box-shadow:0 0 25px #a900354d,0 0 20px #ffcf0020;
+}
+video{width:100%;height:100%;position:absolute;inset:0;object-fit:fill;background:#000}
+.status{font-size:12px;color:#ffcf00;margin:14px 0}
+button{
+ border:1px solid #ffcf00;border-radius:9px;padding:12px 22px;
+ background:linear-gradient(110deg,#a90028,#ed003b);
+ color:#fff;font-weight:bold;font-size:13px;margin:4px;cursor:pointer
+}
+button:active{transform:scale(.97)}
+#message{font-size:12px;color:#c8c0c5;line-height:1.5;margin-top:12px}
+@media(orientation:landscape) and (max-height:500px){
+ body{padding:4px}
+ .main{max-width:80vw}
+ h1{font-size:20px}
+ .subtitle{margin-bottom:5px}
+ .player{height:68vh;aspect-ratio:auto}
+ .status{margin:5px}
+ button{padding:8px 14px}
+ #message{margin-top:4px}
+}
+</style>
+</head>
+<body>
+<div class="main">
+ <h1>GSHD</h1>
+ <div class="subtitle">SARI KIRMIZI • CANLI YAYIN</div> <div class="player" id="player">
+  <video id="video" controls autoplay playsinline webkit-playsinline></video>
+ </div> <div class="status" id="status">● YAYIN BAĞLANTISI KURULUYOR</div><button onclick="startPlayer()">▶ YAYINI BAŞLAT</button>
+<button onclick="fullscreen()">⛶ TAM EKRAN</button>
+
+ <div id="message">Yayın yükleniyor...</div>
+</div><script>
+const URL_STREAM="https://ladyboy.ardastream2.cfd//hls/bein1.m3u8";
+const video=document.getElementById("video");
+const status=document.getElementById("status");
+const message=document.getElementById("message");
+let hls=null;
+
+function setStatus(s){status.textContent="● "+s}
+
+function startPlayer(){
+ if(hls){hls.destroy();hls=null}
+ video.pause();
+ video.removeAttribute("src");
+ video.load();
+
+ if(window.Hls && Hls.isSupported()){
+  hls=new Hls({
+   enableWorker:true,
+   maxBufferLength:20,
+   xhrSetup:function(xhr){
+    xhr.withCredentials=false;
+   }
+  });
+
+  hls.on(Hls.Events.ERROR,function(event,data){
+   if(!data.fatal)return;
+   if(data.type===Hls.ErrorTypes.NETWORK_ERROR){
+    setStatus("BAĞLANTI HATASI");
+    message.textContent="Sunucuya erişilemiyor. Yayın adresi veya sunucu erişimi kontrol edilmeli.";
+   }else if(data.type===Hls.ErrorTypes.MEDIA_ERROR){
+    hls.recoverMediaError();
+   }else{
+    setStatus("YAYIN AÇILAMADI");
+    message.textContent="Yayın kaynağı HLS akışı sunmuyor olabilir veya erişim engellenmiş olabilir.";
+    hls.destroy();hls=null;
+   }
+  });
+
+  hls.on(Hls.Events.MANIFEST_PARSED,function(){
+   setStatus("YAYIN HAZIR");
+   message.textContent="Canlı yayın hazır.";
+   video.play().catch(()=>setStatus("BAŞLATMAK İÇİN OYNAT TUŞUNA BAS"));
+  });
+
+  hls.loadSource(URL_STREAM);
+  hls.attachMedia(video);
+  setStatus("YAYIN YÜKLENİYOR");
+
+ }else if(video.canPlayType("application/vnd.apple.mpegurl")){
+  video.src=URL_STREAM;
+  video.play().catch(()=>setStatus("OYNAT TUŞUNA BAS"));
+ }else{
+  setStatus("TARAYICI DESTEKLEMİYOR");
+ }
 }
 
-* {
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
+function fullscreen(){
+ const p=document.getElementById("player");
+ if(document.fullscreenElement){
+  document.exitFullscreen();
+ }else if(p.requestFullscreen){
+  p.requestFullscreen().catch(()=>{});
+ }else if(video.webkitEnterFullscreen){
+  video.webkitEnterFullscreen();
+ }
 }
 
-html, body {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  overflow: hidden;
-  background: #000;
-  color: #fff;
-  font-family: Inter, Arial, sans-serif;
-}
-
-body {
-  min-height: 100dvh;
-}
-
-button {
-  font: inherit;
-}
-
-#app {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  height: 100dvh;
-  overflow: hidden;
-  background: #080000;
-}
-
-.ambient {
-  position: absolute;
-  inset: -20%;
-  pointer-events: none;
-  background:
-    radial-gradient(ellipse at 15% 20%, rgba(255,207,0,.13), transparent 32%),
-    radial-gradient(ellipse at 85% 70%, rgba(230,0,38,.23), transparent 36%);
-}
-
-.topbar {
-  position: absolute;
-  z-index: 10;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 64px;
-  padding: 0 22px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: linear-gradient(to bottom, rgba(0,0,0,.8), transparent);
-}
-
-.brand {
-  font-size: clamp(18px, 2.5vw, 27px);
-  font-weight: 900;
-  letter-spacing: 1px;
-}
-
-.brand span {
-  color: var(--yellow);
-}
-
-.live-badge {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 7px 12px;
-  border: 1px solid rgba(255,207,0,.5);
-  border-radius: 30px;
-  background: rgba(0,0,0,.6);
-  color: var(--yellow);
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 1px;
-}
-
-.live-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--red);
-  box-shadow: 0 0 12px var(--red);
-  animation: pulse 1.2s infinite;
-}
-
-@keyframes pulse {
-  50% { opacity: .35; }
-}
-
-.screen {
-  position: absolute;
-  inset: 0;
-  display: none;
-}
-
-.screen.active {
-  display: flex;
-}
-
-/* GERİ SAYIM */
-
-#countdownScreen {
-  align-items: center;
-  justify-content: center;
-  padding: 64px 0 0;
-}
-
-.countdown-layout {
-  position: relative;
-  isolation: isolate;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* FOTOĞRAF ARTIK TÜM ALANI KAPLAR */
-
-.background-photo {
-  position: absolute;
-  inset: 0;
-  z-index: -2;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  background: #080000;
-}
-
-.background-photo img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center center;
-}
-
-.background-photo::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(90deg, rgba(0,0,0,.64), rgba(0,0,0,.15), rgba(0,0,0,.64)),
-    linear-gradient(0deg, rgba(0,0,0,.88), transparent 72%);
-}
-
-.countdown-content {
-  width: min(720px, 100%);
-  padding: clamp(18px, 4vw, 42px);
-  text-align: center;
-}
-
-.eyebrow {
-  display: inline-block;
-  padding: 8px 14px;
-  border: 1px solid rgba(255,207,0,.55);
-  border-radius: 30px;
-  background: rgba(0,0,0,.55);
-  color: var(--yellow);
-  font-size: clamp(10px, 1.5vw, 13px);
-  font-weight: 800;
-  letter-spacing: 2px;
-}
-
-.main-title {
-  margin: 20px 0 8px;
-  font-size: clamp(34px, 7vw, 76px);
-  line-height: .98;
-  font-weight: 900;
-  letter-spacing: -2px;
-  text-transform: uppercase;
-  text-shadow: 0 5px 25px #000;
-}
-
-.main-title span {
-  display: block;
-  color: var(--yellow);
-}
-
-.subtitle {
-  margin: 16px auto 24px;
-  color: rgba(255,255,255,.9);
-  font-size: clamp(12px, 2vw, 16px);
-  line-height: 1.6;
-}
-
-.countdown {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: clamp(6px, 1.5vw, 13px);
-  width: min(580px, 100%);
-  margin: 0 auto;
-}
-
-.time-box {
-  min-width: 0;
-  padding: clamp(12px, 2.2vw, 22px) 4px;
-  border-radius: 13px;
-  border: 1px solid rgba(255,207,0,.45);
-  background: linear-gradient(145deg, rgba(230,0,38,.9), rgba(45,0,0,.94));
-  box-shadow: 0 8px 24px rgba(0,0,0,.3);
-}
-
-.time-number {
-  color: var(--yellow);
-  font-size: clamp(23px, 5vw, 46px);
-  line-height: 1;
-  font-weight: 900;
-  font-variant-numeric: tabular-nums;
-}
-
-.time-label {
-  margin-top: 9px;
-  font-size: clamp(8px, 1.4vw, 11px);
-  color: #fff;
-  font-weight: 800;
-  letter-spacing: 1px;
-}
-
-.countdown-note {
-  margin-top: 18px;
-  font-size: 11px;
-  color: rgba(255,255,255,.8);
-}
-
-/* OYNATICI */
-
-#playerScreen {
-  flex-direction: column;
-  background: #000;
-}
-
-.player-topbar {
-  z-index: 4;
-  flex: 0 0 auto;
-  width: 100%;
-  min-height: 54px;
-  padding: 9px 15px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  background: linear-gradient(180deg, rgba(0,0,0,.95), rgba(0,0,0,.65));
-}
-
-.player-title {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: clamp(13px, 2vw, 18px);
-  font-weight: 900;
-}
-
-.player-title span {
-  color: var(--yellow);
-}
-
-.player-actions {
-  display: flex;
-  gap: 8px;
-  flex-shrink: 0;
-}
-
-.action-btn {
-  min-height: 36px;
-  padding: 0 12px;
-  border: 1px solid rgba(255,207,0,.55);
-  border-radius: 8px;
-  background: linear-gradient(135deg, #e60026, #760013);
-  color: #fff;
-  font-size: 11px;
-  font-weight: 800;
-  cursor: pointer;
-}
-
-.action-btn:focus {
-  outline: 2px solid var(--yellow);
-  outline-offset: 3px;
-}
-
-.video-area {
-  position: relative;
-  flex: 1 1 auto;
-  min-height: 0;
-  width: 100%;
-  overflow: hidden;
-  background: #000;
-}
-
-/* İSTEDİĞİN AYAR: FILL */
-
-#player {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: fill;
-  background: #000;
-  border: 0;
-}
-
-#player:focus {
-  outline: none;
-}
-
-#playerMessage {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 25px;
-  text-align: center;
-  background: rgba(0,0,0,.92);
-}
-
-#playerMessage.visible {
-  display: flex;
-}
-
-.message-card {
-  width: min(520px, 100%);
-  padding: 26px;
-  border: 1px solid rgba(255,207,0,.4);
-  border-radius: 15px;
-  background: linear-gradient(145deg, #260000, #080000);
-}
-
-.message-card h2 {
-  margin: 0 0 12px;
-  color: var(--yellow);
-  font-size: clamp(20px, 4vw, 30px);
-}
-
-.message-card p {
-  margin: 0 0 18px;
-  color: rgba(255,255,255,.8);
-  font-size: 13px;
-  line-height: 1.6;
-  overflow-wrap: anywhere;
-}
-
-.message-card button {
-  border: 0;
-  border-radius: 9px;
-  padding: 12px 20px;
-  background: linear-gradient(90deg, var(--yellow), #ff9e00);
-  color: #170000;
-  font-weight: 900;
-  cursor: pointer;
-}
-
-.footer-line {
-  flex: 0 0 auto;
-  min-height: 26px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 5px 10px;
-  background: #080000;
-  color: rgba(255,255,255,.55);
-  font-size: 10px;
-  letter-spacing: 1px;
-}
-
-/* YATAY TV */
-
-@media (orientation: landscape) {
-  .topbar {
-    height: 45px;
-    padding: 0 18px;
-  }
-
-  #countdownScreen {
-    padding: 0;
-  }
-
-  .countdown-layout {
-    width: 100%;
-    height: 100%;
-  }
-
-  .background-photo {
-    inset: 0;
-    width: 100%;
-    height: 100%;
-  }
-
-  .background-photo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center center;
-  }
-
-  .countdown-content {
-    padding: 12px;
-  }
-
-  .main-title {
-    margin: 10px 0 5px;
-    font-size: clamp(30px, 7vh, 58px);
-  }
-
-  .subtitle {
-    margin: 8px auto 14px;
-    font-size: clamp(11px, 2vh, 14px);
-  }
-
-  .countdown {
-    width: min(500px, 100%);
-    gap: 8px;
-  }
-
-  .time-box {
-    padding: 10px 3px;
-  }
-
-  .time-number {
-    font-size: clamp(22px, 5vh, 38px);
-  }
-
-  .time-label {
-    margin-top: 5px;
-  }
-
-  .countdown-note {
-    margin-top: 10px;
-  }
-
-  .player-topbar {
-    min-height: 40px;
-    padding: 4px 12px;
-  }
-
-  .action-btn {
-    min-height: 30px;
-  }
-
-  .footer-line {
-    min-height: 18px;
-  }
-}
-
-/* DİKEY TELEFON */
-
-@media (max-width: 480px) and (orientation: portrait) {
-  .topbar {
-    height: 56px;
-    padding: 0 12px;
-  }
-
-  #countdownScreen {
-    padding: 0;
-  }
-
-  .countdown-layout {
-    height: 100%;
-  }
-
-  .countdown-content {
-    padding: 16px 10px;
-  }
-
-  .main-title {
-    letter-spacing: -1px;
-  }
-
-  .countdown {
-    gap: 5px;
-  }
-
-  .time-box {
-    border-radius: 9px;
-    padding: 13px 2px;
-  }
-
-  .time-label {
-    letter-spacing: 0;
-  }
-
-  .player-topbar {
-    gap: 6px;
-    padding: 8px;
-  }
-
-  .action-btn {
-    padding: 0 8px;
-    font-size: 10px;
-  }
-}
-
-/* KÜÇÜK YATAY EKRAN */
-
-@media (max-height: 420px) and (orientation: landscape) {
-  .player-topbar {
-    min-height: 32px;
-  }
-
-  .footer-line {
-    display: none;
-  }
-}
-
-/* TAM EKRAN */
-
-#playerScreen:fullscreen .player-topbar,
-#playerScreen:fullscreen .footer-line {
-  display: none;
-}
-
-#playerScreen:fullscreen .video-area {
-  width: 100%;
-  height: 100%;
-}
-
-#playerScreen:fullscreen #player {
-  width: 100%;
-  height: 100%;
-  object-fit: fill;
-}
-</style></head><body>
-<div id="app">
-  <div class="ambient"></div>  <header class="topbar">
-    <div class="brand">GSHD <span>VIP</span></div>
-    <div class="live-badge">
-      <span class="live-dot"></span>
-      YAYIN MERKEZİ
-    </div>
-  </header>  <main id="countdownScreen" class="screen active">
-    <section class="countdown-layout">
-      <div class="background-photo">
-        <img
-          src="https://raw.githubusercontent.com/GSHDapk/Logolar/refs/heads/main/file_00000000004081f4883457b1b87cc98d.png"
-          alt=""
-        >
-      </div>  <div class="countdown-content">
-    <div class="eyebrow">★ GSHD VIP ÖZEL YAYIN ★</div>
-
-    <h1 class="main-title">
-      YAYIN
-      <span>BAŞLIYOR</span>
-    </h1>
-
-    <p class="subtitle">Yayının başlamasına kalan süre</p>
-
-    <div class="countdown">
-      <div class="time-box">
-        <div class="time-number" id="days">00</div>
-        <div class="time-label">GÜN</div>
-      </div>
-      <div class="time-box">
-        <div class="time-number" id="hours">00</div>
-        <div class="time-label">SAAT</div>
-      </div>
-      <div class="time-box">
-        <div class="time-number" id="minutes">00</div>
-        <div class="time-label">DAKİKA</div>
-      </div>
-      <div class="time-box">
-        <div class="time-number" id="seconds">00</div>
-        <div class="time-label">SANİYE</div>
-      </div>
-    </div>
-
-    <div class="countdown-note" id="countdownNote">
-      Yayın başladığında oynatıcı açılacaktır.
-    </div>
-  </div>
-</section>
-
-  </main>  <section id="playerScreen" class="screen">
-    <div class="player-topbar">
-      <div class="player-title">GSHD <span>VIP</span> · YAYIN</div>  <div class="player-actions">
-    <button class="action-btn" id="playButton" type="button">▶ OYNAT</button>
-    <button class="action-btn" id="fullscreenButton" type="button">⛶ TAM EKRAN</button>
-  </div>
-</div>
-
-<div class="video-area">
-  <video
-    id="player"
-    controls
-    playsinline
-    webkit-playsinline
-    preload="auto"
-    tabindex="0"
-  ></video>
-
-  <div id="playerMessage">
-    <div class="message-card">
-      <h2 id="messageTitle">Yayın hazır</h2>
-      <p id="messageText">Yayını başlatmak için oynat düğmesine bas.</p>
-      <button type="button" id="messageButton">TEKRAR DENE</button>
-    </div>
-  </div>
-</div>
-
-<div class="footer-line">GSHD VIP · SARI KIRMIZI YAYIN DENEYİMİ</div>
-
-  </section>
-</div><script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script><script>
-/* ==========================================
-   AYARLAR
-   ========================================== */
-
-/* M3U8 veya MP4 bağlantını buraya yaz. */
-const VIDEO_URL = "https://aktif-q65v.onrender.com/play/bein1feed720p";
-
-/* Türkiye saatiyle yayın başlangıcı. */
-const START_TIME = "2026-10-26T21:00:00+03:00";
-
-/* ==========================================
-   OYNATICI
-   ========================================== */
-
-const countdownScreen = document.getElementById("countdownScreen");
-const playerScreen = document.getElementById("playerScreen");
-const player = document.getElementById("player");
-const playerMessage = document.getElementById("playerMessage");
-const messageTitle = document.getElementById("messageTitle");
-const messageText = document.getElementById("messageText");
-const countdownNote = document.getElementById("countdownNote");
-
-let hls = null;
-let playerConfigured = false;
-let playbackRequested = false;
-
-function showMessage(title, text) {
-  messageTitle.textContent = title;
-  messageText.textContent = text;
-  playerMessage.classList.add("visible");
-}
-
-function hideMessage() {
-  playerMessage.classList.remove("visible");
-}
-
-function showPlayer() {
-  countdownScreen.classList.remove("active");
-  playerScreen.classList.add("active");
-
-  if (!playerConfigured) {
-    configurePlayer();
-  }
-}
-
-function configurePlayer() {
-  if (playerConfigured) return;
-  playerConfigured = true;
-
-  const url = VIDEO_URL.trim();
-
-  if (
-    !url ||
-    url === "https://ladyboy.ardastream2.cfd//hls/bein1.m3u8" ||
-    url === "VIDEO_LINKINI_BURAYA.mp4"
-  ) {
-    showMessage(
-      "Yayın bağlantısı eklenmedi",
-      "HTML içindeki VIDEO_URL alanına M3U8 veya MP4 yayın bağlantını ekle."
-    );
-    return;
-  }
-
-  const isM3U8 = /\.m3u8(?:$|[?#])/i.test(url);
-
-  if (isM3U8) {
-    /* Safari ve bazı TV tarayıcılarının yerleşik HLS desteği */
-    if (player.canPlayType("application/vnd.apple.mpegurl")) {
-      player.src = url;
-      player.load();
-      return;
-    }
-
-    /* Yerleşik HLS desteği yoksa HLS.js */
-    if (window.Hls && Hls.isSupported()) {
-      hls = new Hls({
-        enableWorker: true,
-        lowLatencyMode: true,
-        backBufferLength: 30
-      });
-
-      hls.attachMedia(player);
-
-      hls.on(Hls.Events.MEDIA_ATTACHED, function () {
-        hls.loadSource(url);
-      });
-
-      hls.on(Hls.Events.MANIFEST_PARSED, function () {
-        hideMessage();
-        if (playbackRequested) startPlayback();
-      });
-
-      hls.on(Hls.Events.ERROR, function (event, data) {
-        if (!data.fatal) return;
-
-        if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
-          showMessage(
-            "Bağlantı hatası",
-            "Yayın bağlantısını kontrol et. Sunucuya erişilemiyor olabilir."
-          );
-          hls.startLoad();
-        } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
-          hls.recoverMediaError();
-        } else {
-          showMessage(
-            "Oynatma hatası",
-            "Tarayıcı bu yayını desteklemiyor olabilir."
-          );
-          hls.destroy();
-          hls = null;
-        }
-      });
-
-      return;
-    }
-
-    showMessage(
-      "M3U8 desteklenmiyor",
-      "Bu tarayıcı HLS oynatmayı desteklemiyor. HLS destekli bir tarayıcı kullan."
-    );
-    return;
-  }
-
-  /* MP4 veya doğrudan video bağlantısı */
-  player.src = url;
-  player.load();
-}
-
-async function startPlayback() {
-  playbackRequested = true;
-
-  if (!playerConfigured) {
-    configurePlayer();
-  }
-
-  if (!player.src && !hls) return;
-
-  try {
-    hideMessage();
-    await player.play();
-  } catch (error) {
-    showMessage(
-      "Oynatmak için düğmeye bas",
-      "Otomatik oynatma engellenmiş olabilir. OYNAT düğmesine bas."
-    );
-  }
-}
-
-/* ==========================================
-   GERİ SAYIM
-   ========================================== */
-
-function updateCountdown() {
-  const target = new Date(START_TIME).getTime();
-  const distance = target - Date.now();
-
-  if (distance <= 0) {
-    ["days", "hours", "minutes", "seconds"].forEach(function (id) {
-      document.getElementById(id).textContent = "00";
-    });
-
-    countdownNote.textContent = "Yayın başladı.";
-    showPlayer();
-    return;
-  }
-
-  const days = Math.floor(distance / 86400000);
-  const hours = Math.floor((distance % 86400000) / 3600000);
-  const minutes = Math.floor((distance % 3600000) / 60000);
-  const seconds = Math.floor((distance % 60000) / 1000);
-
-  document.getElementById("days").textContent =
-    String(days).padStart(2, "0");
-
-  document.getElementById("hours").textContent =
-    String(hours).padStart(2, "0");
-
-  document.getElementById("minutes").textContent =
-    String(minutes).padStart(2, "0");
-
-  document.getElementById("seconds").textContent =
-    String(seconds).padStart(2, "0");
-}
-
-/* ==========================================
-   DÜĞMELER
-   ========================================== */
-
-document.getElementById("playButton").addEventListener("click", function () {
-  startPlayback();
-});
-
-document.getElementById("messageButton").addEventListener("click", function () {
-  if (hls && hls.startLoad) {
-    hls.startLoad();
-  }
-  startPlayback();
-});
-
-document.getElementById("fullscreenButton").addEventListener("click", async function () {
-  try {
-    if (!document.fullscreenElement) {
-      if (playerScreen.requestFullscreen) {
-        await playerScreen.requestFullscreen();
-      } else if (player.webkitEnterFullscreen) {
-        player.webkitEnterFullscreen();
-      }
-    } else {
-      await document.exitFullscreen();
-    }
-  } catch (error) {
-    try {
-      if (player.webkitEnterFullscreen) {
-        player.webkitEnterFullscreen();
-      }
-    } catch (e) {}
-  }
-});
-
-player.addEventListener("playing", hideMessage);
-
-player.addEventListener("error", function () {
-  if (player.error) {
-    showMessage(
-      "Video oynatılamadı",
-      "Yayın bağlantısını ve tarayıcı uyumluluğunu kontrol et."
-    );
-  }
-});
-
-/* TV kumandası ve klavye */
-document.addEventListener("keydown", function (event) {
-  const key = event.key;
-
-  if (
-    key === "MediaPlay" ||
-    key === "MediaPlayPause" ||
-    key === " "
-  ) {
-    if (playerScreen.classList.contains("active")) {
-      if (player.paused) {
-        startPlayback();
-      } else {
-        player.pause();
-      }
-      event.preventDefault();
-    }
-  }
-
-  if (key === "MediaStop" && playerScreen.classList.contains("active")) {
-    player.pause();
-  }
-
-  if (key === "f" || key === "F") {
-    document.getElementById("fullscreenButton").click();
-  }
-});
-
-/* Başlangıç */
-updateCountdown();
-setInterval(updateCountdown, 1000);
+document.getElementById("player").addEventListener("dblclick",fullscreen);
+video.addEventListener("playing",()=>setStatus("CANLI YAYIN OYNATILIYOR"));
+video.addEventListener("waiting",()=>setStatus("YAYIN YÜKLENİYOR"));
+startPlayer();
 </script></body>
 </html>
